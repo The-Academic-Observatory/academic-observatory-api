@@ -36,7 +36,7 @@ on:
   [ push ]
 env:
   # Artifact registry settings for image build
-  ARTIFACT_REGISTRY: us-docker.pkg.dev
+  REGISTRY: us-docker.pkg.dev
   USER_NAME: _json_key_base64
   IMAGE_PATH: observatory-platform/academic-observatory-api
 
