@@ -39,7 +39,7 @@ resource "google_project_service" "api-project-service" {
 ########################################################################################################################
 
 resource "google_service_account" "api-backend_service_account" {
-  account_id   = "${var.api.name}-api-backend"
+  account_id   = "${var.api.name}-backend"
   display_name = "Cloud Run backend Service Account"
   description = "The Google Service Account used by the cloud run backend"
   depends_on = [google_project_service.services["iam.googleapis.com"]]
@@ -54,7 +54,7 @@ module "env_secret" {
 }
 
 resource "google_cloud_run_service" "api-backend" {
-  name     = "${var.api.name}-api-backend"
+  name     = "${var.api.name}-backend"
   location = var.google_cloud.region
 
   template {
@@ -110,7 +110,7 @@ resource "google_endpoints_service" "api" {
 
 # Create service account used by Cloud Run
 resource "google_service_account" "api-gateway_service_account" {
-  account_id = "${var.api.name}-api-gateway"
+  account_id = "${var.api.name}-gateway"
   display_name = "Cloud Run gateway Service Account"
   description = "The Google Service Account used by the cloud run gateway"
   depends_on = [google_project_service.services["iam.googleapis.com"]]
@@ -132,7 +132,7 @@ resource "google_project_iam_member" "api-gateway_service_account_servicecontrol
 
 # Create/update Cloud Run service
 resource "google_cloud_run_service" "api-gateway" {
-  name = "${var.api.name}-api-gateway"
+  name = "${var.api.name}-gateway"
   location = var.google_cloud.region
   project = var.google_cloud.project_id
   template {
