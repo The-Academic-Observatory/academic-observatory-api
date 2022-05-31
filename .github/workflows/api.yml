@@ -1,122 +1,123 @@
-##This Github action builds docker API images that are uploaded to the GCR and runs a Terraform workflow.
-##
-##For a pull request event:
-##- Run Terraform:
-##  - fmt
-##  - validate
-##  - plan (output is pushed to comment in PR)
-##
-##For a push event to develop or main:
-##- Build and push images
-##- Run Terraform:
-##  - fmt
-##  - validate
-##  - plan
-##  - apply
-##
-##For a published release event:
-##- Build and push images
-##- Run Terraform:
-##  - fmt
-##  - validate
-##  - plan
-##
-##Develop (target) branch settings:
-##- GCP project id: develop, TF workspace: develop, Image tag: develop
-##
-##Main (target) branch settings:
-##- GCP project id: staging, TF workspace: staging, Image tag: staging
-##
-##Published release settings:
-##- GCP project id: production, TF workspace: production, Image tag: <release_name>
+#This Github action builds docker API images that are uploaded to the GCR and runs a Terraform workflow.
 #
-#name: "API Workflow"
+#For a pull request event:
+#- Run Terraform:
+#  - fmt
+#  - validate
+#  - plan (output is pushed to comment in PR)
 #
-#on:
-#  [ push ]
-#env:
-#  # Artifact registry settings for image build
-#  ARTIFACT_REGISTRY: us-docker.pkg.dev
-#  USER_NAME: _json_key_base64
-#  IMAGE_PATH: observatory-platform/academic-observatory-api
+#For a push event to develop or main:
+#- Build and push images
+#- Run Terraform:
+#  - fmt
+#  - validate
+#  - plan
+#  - apply
 #
-##  # The name of the api (should be same as in the config file)
-##  SERVICE: ao
+#For a published release event:
+#- Build and push images
+#- Run Terraform:
+#  - fmt
+#  - validate
+#  - plan
 #
-#  # The Terraform token and organisation
-#  TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-#  TF_BACKEND_ORGANIZATION: ${{ secrets.TF_BACKEND_ORGANIZATION }}
+#Develop (target) branch settings:
+#- GCP project id: develop, TF workspace: develop, Image tag: develop
 #
-#  # The Terraform Cloud workspaces for different environments
-#  DEVELOP_TF_WORKSPACE: ao-develop
-#  STAGING_TF_WORKSPACE: ao-staging
-#  PRODUCTION_TF_WORKSPACE: ao-production
+#Main (target) branch settings:
+#- GCP project id: staging, TF workspace: staging, Image tag: staging
 #
-#  # The GCP keys for different environments
-##  DEVELOP_GCP_SERVICE_KEY: ${{ secrets.DEVELOP_GCP_SERVICE_KEY }}
-##  STAGING_GCP_SERVICE_KEY: ${{ secrets.STAGING_GCP_SERVICE_KEY }}
-##  PRODUCTION_GCP_SERVICE_KEY: ${{ secrets.PRODUCTION_GCP_SERVICE_KEY }}
-#
-#  # The GCP project ids for different environments
-##  DEVELOP_GCP_PROJECT_ID: ${{ secrets.DEVELOP_GCP_PROJECT_ID }}
-##  STAGING_GCP_PROJECT_ID: ${{ secrets.STAGING_GCP_PROJECT_ID }}
-##  PRODUCTION_GCP_PROJECT_ID: ${{ secrets.PRODUCTION_GCP_PROJECT_ID }}
-#
-#jobs:
-#  build-and-push-image:
-#    name: "Build and push docker image for API"
-#    if: github.event_name == 'push' || github.event_name == 'release'
-#    runs-on: ubuntu-latest
-#    permissions:
-#      packages: write
-#      contents: read
-#
-#    strategy:
-#      matrix:
+#Published release settings:
+#- GCP project id: production, TF workspace: production, Image tag: <release_name>
+
+name: "API Workflow"
+
+on:
+  [ push ]
+env:
+  # Artifact registry settings for image build
+  ARTIFACT_REGISTRY: us-docker.pkg.dev
+  USER_NAME: _json_key_base64
+  IMAGE_PATH: observatory-platform/academic-observatory-api
+
+#  # The name of the api (should be same as in the config file)
+#  SERVICE: ao
+
+  # The Terraform token and organisation
+  TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+  TF_BACKEND_ORGANIZATION: ${{ secrets.TF_BACKEND_ORGANIZATION }}
+
+  # The Terraform Cloud workspaces for different environments
+  DEVELOP_TF_WORKSPACE: ao-develop
+  STAGING_TF_WORKSPACE: ao-staging
+  PRODUCTION_TF_WORKSPACE: ao-production
+
+  # The GCP keys for different environments
+#  DEVELOP_GCP_SERVICE_KEY: ${{ secrets.DEVELOP_GCP_SERVICE_KEY }}
+#  STAGING_GCP_SERVICE_KEY: ${{ secrets.STAGING_GCP_SERVICE_KEY }}
+#  PRODUCTION_GCP_SERVICE_KEY: ${{ secrets.PRODUCTION_GCP_SERVICE_KEY }}
+
+  # The GCP project ids for different environments
+#  DEVELOP_GCP_PROJECT_ID: ${{ secrets.DEVELOP_GCP_PROJECT_ID }}
+#  STAGING_GCP_PROJECT_ID: ${{ secrets.STAGING_GCP_PROJECT_ID }}
+#  PRODUCTION_GCP_PROJECT_ID: ${{ secrets.PRODUCTION_GCP_PROJECT_ID }}
+
+jobs:
+  build-and-push-image:
+    name: "Build and push docker image for API"
+    if: github.event_name == 'push' || github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    strategy:
+      matrix:
 #        environment: [ develop, staging, production ]
-#        include:
-#          - environment: develop
-#            gcp_project_id: DEVELOP_GCP_PROJECT_ID
+        environment: [ develop ]
+        include:
+          - environment: develop
+            gcp_project_id: DEVELOP_GCP_PROJECT_ID
 #          - environment: staging
 #            gcp_project_id: STAGING_GCP_PROJECT_ID
 #          - environment: production
 #            gcp_project_id: PRODUCTION_GCP_PROJECT_ID
-#
-#    steps:
-#      - name: Checkout project
-#        uses: actions/checkout@v3
-#
-#      - name: Log in to the Container registry
-#        uses: docker/login-action@v1
-#        with:
-#          registry: ${{ env.REGISTRY }}
-#          username: ${{ env.USER_NAME }}
-#          password: ${{ secrets.ARTIFACT_REGISTRY_GCP_SERVICE_KEY }}
-#
-#      - name: Extract metadata (tags, labels) for Docker
-#        id: meta
-#        uses: docker/metadata-action@v3
-#        with:
-#          images: ${{ env.REGISTRY }}/${{ secrets[matrix.gcp_project_id] }}/${{ env.IMAGE_PATH }}
-#          tags: |
-#            # On any kind of push, set branch name as image tag
-#            type=ref,event=branch
-#
-#            # On push to main branch, set 'latest' as image tag
-#            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
-#
-#            # On push of Github tag, set version as image tag
-#            type=semver,pattern={{version}}
-#
-#      - name: Build and push Docker image
-#        uses: docker/build-push-action@v3
-#        with:
-#          context: ./academic-observatory-api/
-#          push: true
-#
-#          tags: ${{ steps.meta.outputs.tags }}
-#          labels: ${{ steps.meta.outputs.labels }}
-#
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ env.USER_NAME }}
+          password: ${{ secrets.ARTIFACT_REGISTRY_GCP_SERVICE_KEY }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.REGISTRY }}/${{ secrets[matrix.gcp_project_id] }}/${{ env.IMAGE_PATH }}
+          tags: |
+            # On any kind of push, set branch name as image tag
+            type=ref,event=branch
+
+            # On push to main branch, set 'latest' as image tag
+            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+
+            # On push of Github tag, set version as image tag
+            type=semver,pattern={{version}}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./academic-observatory-api/
+          push: true
+
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
 #  terraform:
 #    needs: build-and-push-image
 #    if: always()
