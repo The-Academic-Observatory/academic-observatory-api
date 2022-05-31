@@ -33,7 +33,7 @@ jobs:
           python -m pip install --upgrade pip
 
           cd ..
-          git clone https://github.com/The-Academic-Observatory/coki-api-base.git
+          git clone -b setup https://github.com/The-Academic-Observatory/coki-api-base.git
           pip install -e coki-api-base
 
           cd academic-observatory-workflows
