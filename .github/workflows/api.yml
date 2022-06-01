@@ -191,14 +191,14 @@ jobs:
         id: fmt
         run: terraform fmt -diff -check
 
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
-
       - name: Terraform Init
         id: init
         run: terraform init
           -backend-config="organization="${{ env.TF_BACKEND_ORGANIZATION }}""
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
 
       - name: Terraform Plan
         id: plan
