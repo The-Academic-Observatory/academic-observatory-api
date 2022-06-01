@@ -16,6 +16,12 @@ schemes:
   - https
 produces:
   - application/json
+securityDefinitions:
+  # This section configures basic authentication with an API key.
+  api_key:
+    type: "apiKey"
+    name: "key"
+    in: "query"
 security:
   - api_key: []
 {%- endif %}
@@ -36,7 +42,7 @@ tags:
 - name: Observatory
   description: the Observatory API
 {%- set reports_tag="Observatory" -%}
-{%- else -%}
+{%- else %}
 tags:
 - name: Reports
   description: Test query data to build Open Access reports.
