@@ -67,7 +67,11 @@ module "api" {
   source = "./api"
   #  source                = "The-Academic-Observatory/api/google"
   #  version               = "0.0.7"
-  api                   = var.api
+  name                  = var.name
+  domain_name           = var.domain_name
+  subdomain             = var.subdomain
+  backend_image         = var.backend_image
+  gateway_image         = var.gateway_image
   environment           = var.environment
   google_cloud          = var.google_cloud
   env_vars              = local.env_vars
