@@ -111,7 +111,7 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ secrets[matrix.gcp_project_id] }}/${{ env.IMAGE_PATH }}
           tags: |
             # On any kind of push, set branch name as image tag
-            type=raw,value={{base_ref}},enable=${{ github.event_name == 'push' }}
+            type=raw,value={{base_ref}},enable=${{ github.event_name == 'pull_request' }}
 
             # On push to main branch, set 'latest' as image tag
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
