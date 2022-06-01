@@ -85,6 +85,7 @@ EOF
     elasticsearch_api_key    = string
     elasticsearch_host       = string
   })
+  sensitive = true
 
   validation {
     condition     = var.api_type.type == "data_api" || var.api_type.type == "observatory_api"
