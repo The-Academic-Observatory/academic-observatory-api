@@ -163,11 +163,13 @@ jobs:
       - name: Set Terraform Workspace env for push & release event
         if: github.event_name == 'push' || github.event_name == 'release'
         run: |
-          if [ ${{ github.ref }} == 'refs/heads/develop' ] ; then
-            echo "TF_WORKSPACE=${{ env.DEVELOP_TF_WORKSPACE }}" >> $GITHUB_ENV;
-          elif [ ${{ github.ref }} == 'refs/heads/main' ] && [ ${{ github.event_name }} == 'push' ]; then
-            echo "TF_WORKSPACE=${{ env.STAGING_TF_WORKSPACE }}" >> $GITHUB_ENV;
-          else
+          if [ ${{ github.event_name }} == 'push' ] ; then
+            if [ ${{ github.ref }} == 'refs/heads/main' ] ; then
+              echo "TF_WORKSPACE=${{ env.STAGING_TF_WORKSPACE }}" >> $GITHUB_ENV;
+            else
+              echo "TF_WORKSPACE=${{ env.DEVELOP_TF_WORKSPACE }}" >> $GITHUB_ENV;
+            fi
+          else [ ${{ github.event_name }} == 'release' ]; then
             echo "TF_WORKSPACE=${{ env.PRODUCTION_TF_WORKSPACE }}" >> $GITHUB_ENV;
           fi
 
