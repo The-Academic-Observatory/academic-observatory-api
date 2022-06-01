@@ -146,7 +146,9 @@ jobs:
           python -m pip install --upgrade pip
           cd ..
           pip install -e .
-          pip install coki-api-base==0.0.0
+          
+          git clone -b setup https://github.com/The-Academic-Observatory/coki-api-base.git
+          pip install -e coki-api-base
 
       - name: Render openapi file
         run: |
