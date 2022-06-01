@@ -118,115 +118,115 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-#  terraform:
-#    needs: build-and-push-image
-#    if: always()
-#    name: "Terraform"
-#    defaults:
-#      run:
-#        working-directory: ./academic_observatory_api/terraform
-#    runs-on: ${{ matrix.os }}
-#    strategy:
-#      max-parallel: 4
-#      matrix:
-#        python-version: [ 3.8 ]
-#        os: [ ubuntu-20.04 ]
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v2
-#
-#      - name: Set up Python ${{ matrix.python-version }}
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: ${{ matrix.python-version }}
-#
-#      # TODO remove version specification
-#      - name: Install dependencies
-#        run: |
-#          python -m pip install --upgrade pip
-#          cd ..
-#          pip install -e .
-#          pip install coki-api-base==0.0.0
-#
-#      - name: Render openapi file
-#        run: |
-#          coki-api-base generate-openapi-spec ../server/openapi.yaml.jinja2 ./openapi.yaml.tpl --usage-type cloud_endpoints
-#
-#      - name: Setup Terraform
-#        uses: hashicorp/setup-terraform@v1
-#        with:
-#          # terraform_version: 0.13.0:
-#          cli_config_credentials_token: ${{ env.TF_API_TOKEN }}
-#
-#      - name: Set Terraform Workspace env for push & release event
-#        if: github.event_name == 'push' || github.event_name == 'release'
-#        run: |
-#          if [ ${{ github.ref }} == 'refs/heads/develop' ] ; then
-#            echo "TF_WORKSPACE=${{ env.DEVELOP_TF_WORKSPACE }}" >> $GITHUB_ENV;
-#          elif [ ${{ github.ref }} == 'refs/heads/main' ] && [ ${{ github.event_name }} == 'push' ]; then
-#            echo "TF_WORKSPACE=${{ env.STAGING_TF_WORKSPACE }}" >> $GITHUB_ENV;
-#          else
-#            echo "TF_WORKSPACE=${{ env.PRODUCTION_TF_WORKSPACE }}" >> $GITHUB_ENV;
-#          fi
-#
-#      - name: Set Terraform Workspace env for pull_request event
-#        if: github.event_name == 'pull_request'
-#        run: |
-#          if [ ${{ github.event.pull_request.base.ref }} == 'develop' ] ; then
-#            echo "TF_WORKSPACE=${{ env.DEVELOP_TF_WORKSPACE }}" >> $GITHUB_ENV;
-#          else
-#            echo "TF_WORKSPACE=${{ env.STAGING_TF_WORKSPACE }}" >> $GITHUB_ENV;
-#          fi
-#
-#      - name: Terraform Format
-#        id: fmt
-#        run: terraform fmt -diff -check
-#
-#      - name: Terraform Init
-#        id: init
-#        run: terraform init
-#          -backend-config="organization="${{ env.TF_BACKEND_ORGANIZATION }}""
-#
-#      - name: Terraform Validate
-#        id: validate
-#        run: terraform validate -no-color
-#
-#      - name: Terraform Plan
-#        id: plan
-#        run: terraform plan -no-color
-#        continue-on-error: true
-#
-#      - name: Find Comment
-#        if: github.event_name == 'pull_request'
-#        uses: peter-evans/find-comment@v1
-#        id: fc
-#        with:
-#          issue-number: ${{ github.event.pull_request.number }}
-#          comment-author: 'github-actions[bot]'
-#          body-includes: Terraform Workflow
-#
-#      - name: Create or update comment
-#        if: github.event_name == 'pull_request'
-#        uses: peter-evans/create-or-update-comment@v1
-#        with:
-#          comment-id: ${{ steps.fc.outputs.comment-id }}
-#          issue-number: ${{ github.event.pull_request.number }}
-#          body: |
-#            Terraform Workflow
-#            #### Terraform Format and Style 🖌`${{ steps.fmt.outcome }}`
-#            #### Terraform Initialization ⚙️`${{ steps.init.outcome }}`
-#            #### Terraform Validation 🤖`${{ steps.validate.outcome }}`
-#            #### Terraform Plan 📖`${{ steps.plan.outcome }}`
-#            <details><summary>Show Plan</summary>
-#
-#            ```terraform
-#            ${{ steps.plan.outputs.stdout }}
-#            ```
-#            </details>
-#
-#            *Pusher: @${{ github.actor }}, Action: `${{ github.event_name }}`*
-#          edit-mode: replace
-#
-#      - name: Terraform Plan Status
-#        if: steps.plan.outcome == 'failure'
-#        run: exit 1
+  terraform:
+    needs: build-and-push-image
+    if: always()
+    name: "Terraform"
+    defaults:
+      run:
+        working-directory: ./terraform
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [ 3.8 ]
+        os: [ ubuntu-20.04 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # TODO remove version specification
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          cd ..
+          pip install -e .
+          pip install coki-api-base==0.0.0
+
+      - name: Render openapi file
+        run: |
+          coki-api-base generate-openapi-spec ../academic_observatory_api/openapi.yaml.jinja2 ./openapi.yaml.tpl --usage-type cloud_endpoints
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          # terraform_version: 0.13.0:
+          cli_config_credentials_token: ${{ env.TF_API_TOKEN }}
+
+      - name: Set Terraform Workspace env for push & release event
+        if: github.event_name == 'push' || github.event_name == 'release'
+        run: |
+          if [ ${{ github.ref }} == 'refs/heads/develop' ] ; then
+            echo "TF_WORKSPACE=${{ env.DEVELOP_TF_WORKSPACE }}" >> $GITHUB_ENV;
+          elif [ ${{ github.ref }} == 'refs/heads/main' ] && [ ${{ github.event_name }} == 'push' ]; then
+            echo "TF_WORKSPACE=${{ env.STAGING_TF_WORKSPACE }}" >> $GITHUB_ENV;
+          else
+            echo "TF_WORKSPACE=${{ env.PRODUCTION_TF_WORKSPACE }}" >> $GITHUB_ENV;
+          fi
+
+      - name: Set Terraform Workspace env for pull_request event
+        if: github.event_name == 'pull_request'
+        run: |
+          if [ ${{ github.event.pull_request.base.ref }} == 'develop' ] ; then
+            echo "TF_WORKSPACE=${{ env.DEVELOP_TF_WORKSPACE }}" >> $GITHUB_ENV;
+          else
+            echo "TF_WORKSPACE=${{ env.STAGING_TF_WORKSPACE }}" >> $GITHUB_ENV;
+          fi
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -diff -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+          -backend-config="organization="${{ env.TF_BACKEND_ORGANIZATION }}""
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color
+        continue-on-error: true
+
+      - name: Find Comment
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Terraform Workflow
+
+      - name: Create or update comment
+        if: github.event_name == 'pull_request'
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Terraform Workflow
+            #### Terraform Format and Style 🖌`${{ steps.fmt.outcome }}`
+            #### Terraform Initialization ⚙️`${{ steps.init.outcome }}`
+            #### Terraform Validation 🤖`${{ steps.validate.outcome }}`
+            #### Terraform Plan 📖`${{ steps.plan.outcome }}`
+            <details><summary>Show Plan</summary>
+
+            ```terraform
+            ${{ steps.plan.outputs.stdout }}
+            ```
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: `${{ github.event_name }}`*
+          edit-mode: replace
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
