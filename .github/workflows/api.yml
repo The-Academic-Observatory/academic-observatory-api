@@ -44,6 +44,7 @@ on:
   release:
     types:
       - published
+
 env:
   # Artifact registry settings for image build
   REGISTRY: us-docker.pkg.dev
