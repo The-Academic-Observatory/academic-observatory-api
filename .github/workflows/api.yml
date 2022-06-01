@@ -33,7 +33,17 @@
 name: "API Workflow"
 
 on:
-  [ push ]
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    branches:
+      - develop
+      - main
+  release:
+    types:
+      - published
 env:
   # Artifact registry settings for image build
   REGISTRY: us-docker.pkg.dev
