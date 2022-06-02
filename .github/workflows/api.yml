@@ -156,8 +156,7 @@ jobs:
           cd ..
           pip install -e .
           
-          git clone -b setup https://github.com/The-Academic-Observatory/coki-api-base.git
-          pip install -e coki-api-base
+          pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ coki-api-base
 
       - name: Render openapi file
         run: |
