@@ -16,38 +16,14 @@
 
 from __future__ import annotations
 
-import logging
 import os
 
-import connexion
-from coki_api_base.openapi_renderer import OpenApiRenderer
-
-
-def create_app() -> connexion.App:
-    """Create a Connexion App.
-
-    :return: the Connexion App.
-    """
-
-    logging.info("Creating app")
-
-    # Create the application instance and don't sort JSON output alphabetically
-    conn_app = connexion.App(__name__)
-    conn_app.app.config["JSON_SORT_KEYS"] = False
-    conn_app.app.config["JSONIFY_PRETTYPRINT_REGULAR"] = False
-
-    # Add the OpenAPI specification
-    specification_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-                                      "openapi.yaml.jinja2")
-    builder = OpenApiRenderer(specification_path, usage_type="backend")
-    specification = builder.to_dict()
-    conn_app.add_api(specification)
-
-    return conn_app
-
+from coki_api_base.app import create_app
 
 # Create the Connexion App
-app = create_app()
+config = {"JSON_SORT_KEYS": False, "JSONIFY_PRETTYPRINT_REGULAR": False}
+openapi_spec_path = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), "openapi.yaml.jinja2")
+app = create_app(openapi_spec_path, config)
 
 # Only called when testing locally
 if __name__ == "__main__":
