@@ -75,7 +75,7 @@ env:
 
 jobs:
   build-and-push-image:
-    name: "Build and push docker image for API"
+    name: "Build and push Docker image for API"
     runs-on: ubuntu-latest
     permissions:
       packages: write
