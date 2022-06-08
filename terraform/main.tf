@@ -20,7 +20,6 @@ provider "google" {
   credentials = var.google_cloud.credentials
   project     = var.google_cloud.project_id
   region      = var.google_cloud.region
-  zone        = var.google_cloud.zone
 }
 
 # Get info from the observatory workspace if this is given
@@ -66,13 +65,11 @@ locals {
 module "api" {
   source = "./api"
   #  source                = "The-Academic-Observatory/api/google"
-  #  version               = "0.0.7"
+  #  version               = "0.0.8"
   name                  = var.name
   domain_name           = var.domain_name
-  subdomain             = var.subdomain
   backend_image         = var.backend_image
   gateway_image         = var.gateway_image
-  environment           = var.environment
   google_cloud          = var.google_cloud
   env_vars              = local.env_vars
   cloud_run_annotations = local.cloud_run_annotations
