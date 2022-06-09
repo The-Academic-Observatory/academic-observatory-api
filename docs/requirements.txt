@@ -5,3 +5,4 @@ sphinx-rtd-theme==0.5.*
 recommonmark==0.7.*
 pbr==5.5.*
 sphinxcontrib.openapi==0.7.*
+mistune<2
