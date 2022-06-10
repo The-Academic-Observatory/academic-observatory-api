@@ -33,9 +33,7 @@ jobs:
           python -m pip install --upgrade pip
 
           cd ..
-          git clone -b setup https://github.com/The-Academic-Observatory/coki-api-base.git
-          pip install -e coki-api-base
-
+          pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ coki-api-base
           pip install -e academic-observatory-api[tests]
 
       - name: Check licenses
