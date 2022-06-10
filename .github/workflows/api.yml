@@ -119,6 +119,20 @@ jobs:
             # On push of Github tag, set version as image tag
             type=semver,pattern={{version}}
 
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ coki-api-base
+
+      - name: Render Dockerfile
+        run: |
+          coki-api-base generate-dockerfile Dockerfile --app-module-path "academic_observatory_api.server.app:app"
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:

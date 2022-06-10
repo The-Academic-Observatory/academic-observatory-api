@@ -22,7 +22,7 @@ from connexion import request
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
 from flask import jsonify, current_app
-from utils import (
+from academic_observatory_api.server.utils import (
     APIError,
     create_es_connection,
     create_search_body,
