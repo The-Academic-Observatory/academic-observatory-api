@@ -11,50 +11,32 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 
 {# Security settings #}
-{%- if type == 'cloud_endpoints' or type == 'openapi_generator' -%}
-schemes:
-  - https
-produces:
-  - application/json
-securityDefinitions:
-  # This section configures basic authentication with an API key.
-  api_key:
-    type: "apiKey"
-    name: "key"
-    in: "query"
-security:
-  - api_key: []
-{%- endif %}
+{% block security %}
+{% endblock %}
 
 {# Host settings #}
-{%- if type == 'openapi_generator' -%}
-host: ao.api.observatory.academy
-{%- elif type == 'cloud_endpoints' -%}
-host: ${host}
-x-google-backend:
-  address: ${backend_address}
-  protocol: h2
-{%- endif -%}
+{% block host %}
+{% endblock %}
+
+{# Operation id namespace #}
+{% if type == 'openapi_generator' %}
+{% set operation_id_namespace="" %}
+{% else %}
+{% set operation_id_namespace="academic_observatory_api.server.api." %}
+{% endif %}
 
 {# Tag settings #}
-{%- if type == 'openapi_generator' %}
+{% if type == 'openapi_generator' %}
 tags:
 - name: Observatory
   description: the Observatory API
-{%- set reports_tag="Observatory" -%}
-{%- else %}
+{% set reports_tag="Observatory" %}
+{% else %}
 tags:
 - name: Reports
   description: Test query data to build Open Access reports.
-{%- set reports_tag="Reports" -%}
-{%- endif %}
-
-{# Operation id namespace #}
-{%- if type == 'openapi_generator' -%}
-{%- set operation_id_namespace="" -%}
-{%- else -%}
-{%- set operation_id_namespace="academic_observatory_api.server.api." -%}
-{%- endif -%}
+{% set reports_tag="Reports" %}
+{% endif %}
 
 paths:
   /v1/{agg}/pit:
