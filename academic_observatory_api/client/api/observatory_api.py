@@ -40,7 +40,9 @@ class ObservatoryApi(object):
         self.pit_id_agg_endpoint = _Endpoint(
             settings={
                 'response_type': (PitResponse,),
-                'auth': [],
+                'auth': [
+                    'api_key'
+                ],
                 'endpoint_path': '/v1/{agg}/pit',
                 'operation_id': 'pit_id_agg',
                 'http_method': 'GET',
@@ -118,7 +120,9 @@ class ObservatoryApi(object):
         self.pit_id_subagg_endpoint = _Endpoint(
             settings={
                 'response_type': (PitResponse,),
-                'auth': [],
+                'auth': [
+                    'api_key'
+                ],
                 'endpoint_path': '/v1/{agg}/{subagg}/pit',
                 'operation_id': 'pit_id_subagg',
                 'http_method': 'GET',
@@ -218,7 +222,9 @@ class ObservatoryApi(object):
         self.query_agg_endpoint = _Endpoint(
             settings={
                 'response_type': (QueryResponse,),
-                'auth': [],
+                'auth': [
+                    'api_key'
+                ],
                 'endpoint_path': '/v1/{agg}',
                 'operation_id': 'query_agg',
                 'http_method': 'GET',
@@ -341,7 +347,9 @@ class ObservatoryApi(object):
         self.query_subagg_endpoint = _Endpoint(
             settings={
                 'response_type': (QueryResponse,),
-                'auth': [],
+                'auth': [
+                    'api_key'
+                ],
                 'endpoint_path': '/v1/{agg}/{subagg}',
                 'operation_id': 'query_subagg',
                 'http_method': 'GET',

@@ -78,6 +78,26 @@ class Configuration(object):
     :param ssl_ca_cert: str - the path to a file of concatenated CA certificates
       in PEM format
 
+    :Example:
+
+    API Key Authentication Example.
+    Given the following security scheme in the OpenAPI specification:
+      components:
+        securitySchemes:
+          cookieAuth:         # name for the security scheme
+            type: apiKey
+            in: cookie
+            name: JSESSIONID  # cookie name
+
+    You can programmatically set the cookie:
+
+conf = academic_observatory_api.client.Configuration(
+    api_key={'cookieAuth': 'abc123'}
+    api_key_prefix={'cookieAuth': 'JSESSIONID'}
+)
+
+    The following cookie will be added to the HTTP request:
+       Cookie: JSESSIONID abc123
     """
 
     _default = None
@@ -94,7 +114,7 @@ class Configuration(object):
                  ):
         """Constructor
         """
-        self._base_path = "https://ao-api.observatory.academy" if host is None else host
+        self._base_path = "https://ao.api.observatory.academy" if host is None else host
         """Default Base url
         """
         self.server_index = 0 if server_index is None and host is None else server_index
@@ -368,6 +388,15 @@ class Configuration(object):
         :return: The Auth Settings information dict.
         """
         auth = {}
+        if 'api_key' in self.api_key:
+            auth['api_key'] = {
+                'type': 'api_key',
+                'in': 'query',
+                'key': 'key',
+                'value': self.get_api_key_with_prefix(
+                    'api_key',
+                ),
+            }
         return auth
 
     def to_debug_report(self):
@@ -389,7 +418,7 @@ class Configuration(object):
         """
         return [
             {
-                'url': "https://ao-api.observatory.academy",
+                'url': "https://ao.api.observatory.academy",
                 'description': "No description provided",
             }
         ]

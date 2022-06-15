@@ -18,12 +18,22 @@ from pprint import pprint
 from academic_observatory_api.client.api import observatory_api
 from academic_observatory_api.client.model.pit_response import PitResponse
 from academic_observatory_api.client.model.query_response import QueryResponse
-# Defining the host is optional and defaults to https://ao-api.observatory.academy
+# Defining the host is optional and defaults to https://ao.api.observatory.academy
 # See configuration.py for a list of all supported configuration parameters.
 configuration = academic_observatory_api.client.Configuration(
-    host = "https://ao-api.observatory.academy"
+    host = "https://ao.api.observatory.academy"
 )
 
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure API key authorization: api_key
+configuration.api_key['api_key'] = 'YOUR_API_KEY'
+
+# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+# configuration.api_key_prefix['api_key'] = 'Bearer'
 
 
 # Enter a context with an instance of the API client
@@ -43,7 +53,7 @@ keep_alive = 1 # int | How long to keep the point in time id alive (in minutes) 
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://ao-api.observatory.academy*
+All URIs are relative to *https://ao.api.observatory.academy*
 
 ```eval_rst
 .. toctree::
@@ -108,4 +118,10 @@ All URIs are relative to *https://ao-api.observatory.academy*
 
 ## Documentation For Authorization
 
- All endpoints do not require authorization.
+
+## api_key
+
+- **Type**: API key
+- **API key parameter name**: key
+- **Location**: URL query string
+
