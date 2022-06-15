@@ -10,32 +10,28 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 
-{# Security settings #}
-{% block security %}
-{% endblock %}
+{% set host_address="ao.api.observatory.academy" %}
+{# Set security and host settings #}
+{% include 'openapi_blocks.yaml.jinja2' %}
 
-{# Host settings #}
-{% block host %}
-{% endblock %}
+{# Tag settings #}
+{% if type == 'openapi_generator' %}
+{% set reports_tag="Observatory" %}
+tags:
+- name: Observatory
+  description: the Observatory API
+{% else %}
+{% set reports_tag="Reports" %}
+tags:
+- name: Reports
+  description: Test query data to build Open Access reports.
+{% endif %}
 
 {# Operation id namespace #}
 {% if type == 'openapi_generator' %}
 {% set operation_id_namespace="" %}
 {% else %}
 {% set operation_id_namespace="academic_observatory_api.server.api." %}
-{% endif %}
-
-{# Tag settings #}
-{% if type == 'openapi_generator' %}
-tags:
-- name: Observatory
-  description: the Observatory API
-{% set reports_tag="Observatory" %}
-{% else %}
-tags:
-- name: Reports
-  description: Test query data to build Open Access reports.
-{% set reports_tag="Reports" %}
 {% endif %}
 
 paths:
