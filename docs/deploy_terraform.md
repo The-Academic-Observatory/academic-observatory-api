@@ -93,7 +93,10 @@ domain, the service account has to be added as a verified domain owner, see the
 [Google Docs](https://cloud.google.com/run/docs/mapping-custom-domains#add-verified) for more information.
 
 ## Create a Docker image
-Build a Docker image and push to the Google Artifact Registry with the Github workflow in this repository.  
+Build a Docker image and push to the Google Artifact Registry with the Github workflow in this repository.
+The workflow will use the [coki-api-base](https://github.com/The-Academic-Observatory/coki-api-base) library to 
+generate a Dockerfile from a template.
+
 This workflow is automatically triggered by any of the following:
 - Push to the 'develop' or 'main' branch
 - Pull request event with the 'develop' or 'main' branch as target
