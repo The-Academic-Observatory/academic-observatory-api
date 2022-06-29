@@ -1,5 +1,5 @@
 """
-    academic-observatory-workflows API
+    Academic Observatory API
 
     The REST API for accessing data from academic-observatory-workflows.   # noqa: E501
 
@@ -12,14 +12,14 @@
 import unittest
 
 import academic_observatory_api.client
-from academic_observatory_api.client.api.observatory_api import ObservatoryApi  # noqa: E501
+from academic_observatory_api.client.api.academic_observatory_api import AcademicObservatoryApi  # noqa: E501
 
 
-class TestObservatoryApi(unittest.TestCase):
-    """ObservatoryApi unit test stubs"""
+class TestAcademicObservatoryApi(unittest.TestCase):
+    """AcademicObservatoryApi unit test stubs"""
 
     def setUp(self):
-        self.api = ObservatoryApi()  # noqa: E501
+        self.api = AcademicObservatoryApi()  # noqa: E501
 
     def tearDown(self):
         pass
