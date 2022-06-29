@@ -2,6 +2,19 @@
 ## Set up custom domain name
 Register a custom domain that will be used for the API.
 
+## Create OpenAPI template
+Create the OpenAPI.yaml.tpl file, this is a template file that will be used by the Terraform configuration of the 
+API module for the Cloud Endpoints service.
+The file should be stored inside the `terraform` directory of this repository, in the same directory as the 'main.tf' configuration file.
+
+To generate this template using the `generate-openapi-spec` command from the 
+[coki-api-base](https://github.com/The-Academic-Observatory/coki-api-base) library:
+
+```
+$ coki-api-base generate-openapi-spec academic_observatory_api/openapi.yaml.jinja2 terraform/openapi.yaml.tpl 
+--usage-type cloud_endpoints
+```
+
 ## Set up Elasticsearch server
 ### Create indices
 Create indices in Elasticsearch with aliases that map to the aliases defined in the `ElasticsearchIndex` class inside 
@@ -11,7 +24,7 @@ Create indices in Elasticsearch with aliases that map to the aliases defined in 
 Generate and encode an API key, the encoded API key is used for the Terraform variable 'elasticsearch_api_key'. 
 When this variable is set, a Google Cloud secret is created and the value is retrieved as an environment variable 
 inside the Academic Observatory API by using Berglas.  
-To generate an API key, execute in the Kibana Dev console:
+To generate an encoded API key, execute in the Kibana Dev console:
 ```yaml
 POST /_security/api_key
 {
@@ -36,14 +49,11 @@ This returns:
   "id" : "random_id",
   "name" : "my-dev-api-key",
   "api_key" : "random_api_key"
+  "encoded": "random_id:random_api_key base64 encoded"
 }
 ```
 
-Concat id:api_key and base64 encode (this final value is what is used for the Terraform variable 
-'elasticsearch_api_key'):
-```bash
-printf 'random_id:random_api_key' | base64
-```
+The value of the returned "encoded" field is used for the Terraform variable 'elasticsearch_api_key'.
 
 ### Get Elasticsearch host address
 From the Elastic portal, get the address of the Elasticsearch server. This is used for the Terraform variable 
@@ -61,18 +71,21 @@ Create a service account with the following roles assigned:
 * Service Usage Admin (To enable Google API services)
 
 ### Generate service account JSON key
-Create a new JSON key for this service account and format the content in such a way that it can be read as a Terraform variable.
-To do this, run the following Python snippet:
-
-```python
-import json
-
-with open("/path/to/credentials.json", "r") as f:
-    data = f.read()
-credentials = json.dumps(data)
+Create a new JSON key for this service account and remove the newlines so that it can be read as a Terraform 
+environment variable.
+To do this, either run in the terminal:
+```shell
+cat /path/to/credentials.json | tr '\n' ' '
 ```
 
-Copy the 'credentials' value and use it for the 'google_cloud' Terraform variable, see below.
+Or run the following Python snippet:
+
+```python
+with open("/path/to/credentials.json", "r") as f:
+    credentials = f.read().replace("\n", "")
+```
+
+Copy the terminal output or 'credentials' value and use it for the 'google_cloud' Terraform variable, see below.
 
 ### Add service account as verified domain owner
 In order to create a domain mapping between the generated domain of the Cloud Run gateway service and a custom 
@@ -89,16 +102,19 @@ This workflow is automatically triggered by any of the following:
 The URL of this image on the Artifact Registry is used for the 'backend_image' Terraform variable, see below.
 
 ## Create a Terraform workspace
-Create a Terraform workspace and set up the following variables:
+Create a Terraform Cloud workspace, add the 'academic-observatory-api' tag and set up the following variables:
 
-| Variable      | Example                                                                                                                                                                                                               | HCL | Sensitive |
-|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----|-----------|
-| google_cloud  | {<br/>"project_id"="my-project-id",<br/>"credentials"="json-credentials",<br/>"region="us-central1"<br/>}                                                                                                             | Yes | Yes       |
-| name          | ao                                                                                                                                                                                                                    | No  | No        |
-| domain_name   | my-project-id.ao.api.observatory.academy                                                                                                                                                                              | No  | Yes       |
-| backend_image | us-docker.pkg.dev/your-project-name/observatory-platform/observatory-api:0.3.1                                                                                                                                        | No  | Yes       |
-| gateway_image | gcr.io/endpoints-release/endpoints-runtime-serverless:2                                                                                                                                                               | No  | No        |
-| api_type      | {<br/>"type"="data_api",<br/>"observatory_organization"="",<br/>"observatory_workspace"="",<br/>elasticsearch_host="https://my-project-id.es.us-west1.gcp.cloud.es.io:9243",<br/>elasticsearch_api_key="APIKEY"<br/>} | Yes | Yes       |
+| Variable              | Example                                                                        | Env | HCL | Sensitive |
+|-----------------------|:-------------------------------------------------------------------------------|:---:|:---:|:---------:|
+| GOOGLE_CREDENTIALS    | <json-credentials>                                                             | Yes | NA  |    Yes    |
+| google_cloud          | {<br/>"project_id"="my-project-id",<br/>"region"="us-central1"<br/>}           | No  | Yes |    No     |
+| name                  | ao                                                                             | No  | No  |    No     |
+| domain_name           | my-project-id.ao.api.observatory.academy                                       | No  | No  |    No     |
+| backend_image         | us-docker.pkg.dev/your-project-name/observatory-platform/observatory-api:0.3.1 | No  | No  |    No     |
+| gateway_image         | gcr.io/endpoints-release/endpoints-runtime-serverless:2                        | No  | No  |    No     |
+| elasticsearch_host    | https://my-project-id.es.us-west1.gcp.cloud.es.io:9243                         | No  | No  |    No     |
+| elasticsearch_api_key | <encoded-api-key>                                                              | No  | No  |    Yes    |
+
 
 ## Create cloud resources with Terraform
 Enter 'terraform' directory inside this repository
