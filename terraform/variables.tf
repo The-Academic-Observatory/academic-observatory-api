@@ -3,13 +3,11 @@ variable "google_cloud" {
 The Google Cloud settings for the Observatory Platform.
 
 project_id: the Google Cloud project id.
-credentials: the Google Cloud credentials in JSON format.
 region: the Google Cloud region.
 EOF
   type = object({
-    project_id  = string
-    credentials = string
-    region      = string
+    project_id = string
+    region     = string
   })
   sensitive = true
 }
@@ -40,30 +38,12 @@ variable "gateway_image" {
   type        = string
 }
 
-variable "api_type" {
-  description = <<EOF
-Setting related to the specific api type, either the data api or observatory api.
-The data api requires the observatory organization and workspace set, while the data api requires the elasticsearch
-host and api key set.
-EOF
-  type = object({
-    type                     = string
-    observatory_organization = string
-    observatory_workspace    = string
-    elasticsearch_api_key    = string
-    elasticsearch_host       = string
-  })
-  sensitive = true
+variable "elasticsearch_host" {
+  description = "The address of the Elasticsearch server, e.g. "
+  type        = string
+}
 
-  validation {
-    condition     = var.api_type.type == "data_api" || var.api_type.type == "observatory_api"
-    error_message = "The api type must either be 'data_api' or 'observatory_api'."
-  }
-  validation {
-    condition = (
-      var.api_type.type == "data_api" && var.api_type.elasticsearch_host != "" && var.api_type.elasticsearch_api_key != "" ||
-      var.api_type.type == "observatory_api" && var.api_type.observatory_organization != "" && var.api_type.observatory_workspace != ""
-    )
-    error_message = "Elasticsearch host and api key can not be empty when the api type is set to 'data_api' and observatory organization and workspace can not be empty when the api type is set to 'observatory_api'.."
-  }
+variable "elasticsearch_api_key" {
+  description = "An API key for the Elasticsearch server"
+  type        = string
 }
