@@ -1,5 +1,5 @@
 """
-    academic-observatory-workflows API
+    Academic Observatory API
 
     The REST API for accessing data from academic-observatory-workflows.   # noqa: E501
 
@@ -802,7 +802,7 @@ class Endpoint(object):
         """ This method is invoked when endpoints are called
         Example:
 
-        api_instance = ObservatoryApi()
+        api_instance = AcademicObservatoryApi()
         api_instance.pit_id_agg  # this is an instance of the class Endpoint
         api_instance.pit_id_agg()  # this invokes api_instance.pit_id_agg.__call__()
         which then invokes the callable functions stored in that endpoint at

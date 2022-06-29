@@ -15,7 +15,7 @@ you can run the following:
 import time
 import academic_observatory_api.client
 from pprint import pprint
-from academic_observatory_api.client.api import observatory_api
+from academic_observatory_api.client.api import academic_observatory_api
 from academic_observatory_api.client.model.pit_response import PitResponse
 from academic_observatory_api.client.model.query_response import QueryResponse
 # Defining the host is optional and defaults to https://ao.api.observatory.academy
@@ -39,7 +39,7 @@ configuration.api_key['api_key'] = 'YOUR_API_KEY'
 # Enter a context with an instance of the API client
 with academic_observatory_api.client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = observatory_api.ObservatoryApi(api_client)
+    api_instance = academic_observatory_api.AcademicObservatoryApi(api_client)
     agg = "author" # str | The aggregate.
 index_date = dateutil_parser('1970-01-01').date() # date | Index date, defaults to latest (optional)
 keep_alive = 1 # int | How long to keep the point in time id alive (in minutes)  (optional)
@@ -48,7 +48,7 @@ keep_alive = 1 # int | How long to keep the point in time id alive (in minutes) 
         api_response = api_instance.pit_id_agg(agg, index_date=index_date, keep_alive=keep_alive)
         pprint(api_response)
     except academic_observatory_api.client.ApiException as e:
-        print("Exception when calling ObservatoryApi->pit_id_agg: %s\n" % e)
+        print("Exception when calling AcademicObservatoryApi->pit_id_agg: %s\n" % e)
 ```
 
 ## Documentation for API Endpoints
@@ -75,29 +75,29 @@ All URIs are relative to *https://ao.api.observatory.academy*
 
 
 <tr>
-<td><em>ObservatoryApi</em></td>
-<td><a href="ObservatoryApi.html#pit_id_agg"><strong>pit_id_agg</strong></a></td>
+<td><em>AcademicObservatoryApi</em></td>
+<td><a href="AcademicObservatoryApi.html#pit_id_agg"><strong>pit_id_agg</strong></a></td>
 <td><strong>GET</strong> /v1/{agg}/pit</td>
 <td></td>
 </tr>
 
 <tr>
-<td><em>ObservatoryApi</em></td>
-<td><a href="ObservatoryApi.html#pit_id_subagg"><strong>pit_id_subagg</strong></a></td>
+<td><em>AcademicObservatoryApi</em></td>
+<td><a href="AcademicObservatoryApi.html#pit_id_subagg"><strong>pit_id_subagg</strong></a></td>
 <td><strong>GET</strong> /v1/{agg}/{subagg}/pit</td>
 <td></td>
 </tr>
 
 <tr>
-<td><em>ObservatoryApi</em></td>
-<td><a href="ObservatoryApi.html#query_agg"><strong>query_agg</strong></a></td>
+<td><em>AcademicObservatoryApi</em></td>
+<td><a href="AcademicObservatoryApi.html#query_agg"><strong>query_agg</strong></a></td>
 <td><strong>GET</strong> /v1/{agg}</td>
 <td></td>
 </tr>
 
 <tr>
-<td><em>ObservatoryApi</em></td>
-<td><a href="ObservatoryApi.html#query_subagg"><strong>query_subagg</strong></a></td>
+<td><em>AcademicObservatoryApi</em></td>
+<td><a href="AcademicObservatoryApi.html#query_subagg"><strong>query_subagg</strong></a></td>
 <td><strong>GET</strong> /v1/{agg}/{subagg}</td>
 <td></td>
 </tr>

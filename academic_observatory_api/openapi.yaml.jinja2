@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: academic-observatory-workflows API
+  title: Academic Observatory API
   description: |
     The REST API for accessing data from academic-observatory-workflows.
   version: 1.0.0
@@ -15,17 +15,10 @@ info:
 {% include 'openapi_blocks.yaml.jinja2' %}
 
 {# Tag settings #}
-{% if type == 'openapi_generator' %}
-{% set reports_tag="Observatory" %}
+{% set tag="AcademicObservatory" %}
 tags:
-- name: Observatory
-  description: the Observatory API
-{% else %}
-{% set reports_tag="Reports" %}
-tags:
-- name: Reports
-  description: Test query data to build Open Access reports.
-{% endif %}
+- name: {{ tag }}
+  description: The Academic Observatory API
 
 {# Operation id namespace #}
 {% if type == 'openapi_generator' %}
@@ -39,7 +32,7 @@ paths:
     get:
       operationId: {{ operation_id_namespace }}pit_id_agg
       tags:
-        - {{ reports_tag }}
+        - {{ tag }}
       parameters:
         - $ref: '#/parameters/aggregate'
         - $ref: '#/parameters/indexDate'
@@ -59,7 +52,7 @@ paths:
     get:
       operationId: {{ operation_id_namespace }}query_agg
       tags:
-        - {{ reports_tag }}
+        - {{ tag }}
       parameters:
         - $ref: '#/parameters/aggregate'
         - $ref: '#/parameters/aggregateId'
@@ -83,7 +76,7 @@ paths:
     get:
       operationId: {{ operation_id_namespace }}pit_id_subagg
       tags:
-        - {{ reports_tag }}
+        - {{ tag }}
       parameters:
         - $ref: '#/parameters/aggregate'
         - $ref: '#/parameters/subaggregate'
@@ -106,7 +99,7 @@ paths:
     get:
       operationId: {{ operation_id_namespace }}query_subagg
       tags:
-        - {{ reports_tag }}
+        - {{ tag }}
       parameters:
         - $ref: '#/parameters/aggregate'
         - $ref: '#/parameters/subaggregate'

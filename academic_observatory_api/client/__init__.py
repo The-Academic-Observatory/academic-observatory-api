@@ -1,7 +1,7 @@
 # flake8: noqa
 
 """
-    academic-observatory-workflows API
+    Academic Observatory API
 
     The REST API for accessing data from academic-observatory-workflows.   # noqa: E501
 

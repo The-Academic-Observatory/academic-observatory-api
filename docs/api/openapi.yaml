@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: academic-observatory-workflows API
+  title: Academic Observatory API
   description: |
     The REST API for accessing data from academic-observatory-workflows.
   version: 1.0.0
@@ -26,8 +26,8 @@ security:
 host: ao.api.observatory.academy
 
 tags:
-- name: Observatory
-  description: the Observatory API
+- name: AcademicObservatory
+  description: The Academic Observatory API
 
 
 paths:
@@ -35,7 +35,7 @@ paths:
     get:
       operationId: pit_id_agg
       tags:
-        - Observatory
+        - AcademicObservatory
       parameters:
         - $ref: '#/parameters/aggregate'
         - $ref: '#/parameters/indexDate'
@@ -55,7 +55,7 @@ paths:
     get:
       operationId: query_agg
       tags:
-        - Observatory
+        - AcademicObservatory
       parameters:
         - $ref: '#/parameters/aggregate'
         - $ref: '#/parameters/aggregateId'
@@ -79,7 +79,7 @@ paths:
     get:
       operationId: pit_id_subagg
       tags:
-        - Observatory
+        - AcademicObservatory
       parameters:
         - $ref: '#/parameters/aggregate'
         - $ref: '#/parameters/subaggregate'
@@ -102,7 +102,7 @@ paths:
     get:
       operationId: query_subagg
       tags:
-        - Observatory
+        - AcademicObservatory
       parameters:
         - $ref: '#/parameters/aggregate'
         - $ref: '#/parameters/subaggregate'
