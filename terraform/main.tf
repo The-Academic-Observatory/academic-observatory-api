@@ -19,9 +19,8 @@ provider "google" {
 
 
 module "api" {
-  source = "./api"
-  #  source                = "The-Academic-Observatory/api/google"
-  #  version               = "0.0.8"
+  source        = "The-Academic-Observatory/api/google"
+  version       = "0.0.9"
   name          = var.name
   domain_name   = var.domain_name
   backend_image = var.backend_image
