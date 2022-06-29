@@ -104,17 +104,27 @@ The URL of this image on the Artifact Registry is used for the 'backend_image' T
 ## Create a Terraform workspace
 Create a Terraform Cloud workspace, add the 'academic-observatory-api' tag and set up the following variables:
 
-| Variable              | Example                                                                        | Env | HCL | Sensitive |
-|-----------------------|:-------------------------------------------------------------------------------|:---:|:---:|:---------:|
-| GOOGLE_CREDENTIALS    | <json-credentials>                                                             | Yes | NA  |    Yes    |
-| google_cloud          | {<br/>"project_id"="my-project-id",<br/>"region"="us-central1"<br/>}           | No  | Yes |    No     |
-| name                  | ao                                                                             | No  | No  |    No     |
-| domain_name           | my-project-id.ao.api.observatory.academy                                       | No  | No  |    No     |
-| backend_image         | us-docker.pkg.dev/your-project-name/observatory-platform/observatory-api:0.3.1 | No  | No  |    No     |
-| gateway_image         | gcr.io/endpoints-release/endpoints-runtime-serverless:2                        | No  | No  |    No     |
-| elasticsearch_host    | https://my-project-id.es.us-west1.gcp.cloud.es.io:9243                         | No  | No  |    No     |
-| elasticsearch_api_key | <encoded-api-key>                                                              | No  | No  |    Yes    |
-
+```eval_rst
++-------------------------+-----+-----+-----------+--------------------------------------------------------------------------------+
+| Variable                | Env | HCL | Sensitive | Example                                                                        |
++=========================+=====+=====+===========+================================================================================+
+| GOOGLE_CREDENTIALS      | Yes | NA  |    Yes    | <json-credentials>                                                             |
++-------------------------+-----+-----+-----------+--------------------------------------------------------------------------------+
+| google_cloud            | No  | Yes |    No     | {"project_id"="my-project-id","region"="us-central1"}                          |
++-------------------------+-----+-----+-----------+--------------------------------------------------------------------------------+
+| name                    | No  | No  |    No     | ao                                                                             |
++-------------------------+-----+-----+-----------+--------------------------------------------------------------------------------+
+| domain_name             | No  | No  |    No     | my-project-id.ao.api.observatory.academy                                       |
++-------------------------+-----+-----+-----------+--------------------------------------------------------------------------------+
+| backend_image           | No  | No  |    No     | us-docker.pkg.dev/your-project-name/observatory-platform/observatory-api:0.3.1 |
++-------------------------+-----+-----+-----------+--------------------------------------------------------------------------------+
+| gateway_image           | No  | No  |    No     | gcr.io/endpoints-release/endpoints-runtime-serverless:2                        |
++-------------------------+-----+-----+-----------+--------------------------------------------------------------------------------+
+| elasticsearch_host      | No  | No  |    No     | https://my-project-id.es.us-west1.gcp.cloud.es.io:9243                         |
++-------------------------+-----+-----+-----------+--------------------------------------------------------------------------------+
+| elasticsearch_api_key   | No  | No  |    Yes    | <encoded-api-key>                                                              |
++-------------------------+-----+-----+-----------+--------------------------------------------------------------------------------+
+```
 
 ## Create cloud resources with Terraform
 Enter 'terraform' directory inside this repository
