@@ -59,9 +59,9 @@ env:
   TF_BACKEND_ORGANIZATION: ${{ secrets.TF_BACKEND_ORGANIZATION }}
 
   # The Terraform Cloud workspaces for different environments
-  DEVELOP_TF_WORKSPACE: ao-develop
-  STAGING_TF_WORKSPACE: ao-staging
-  PRODUCTION_TF_WORKSPACE: ao-production
+  DEVELOP_TF_WORKSPACE: academic-observatory-api-dev
+  STAGING_TF_WORKSPACE: academic-observatory-api-staging
+  PRODUCTION_TF_WORKSPACE: academic-observatory-api-prod
 
   # The GCP keys for different environments
 #  DEVELOP_GCP_SERVICE_KEY: ${{ secrets.DEVELOP_GCP_SERVICE_KEY }}
