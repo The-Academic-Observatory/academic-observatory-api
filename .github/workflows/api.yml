@@ -211,7 +211,7 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
-          echo "TF_CLOUD_ORGANIZATION=${{env.TF_BACKEND_ORGANIZATION}}"
+          echo "TF_CLOUD_ORGANIZATION=${{env.TF_BACKEND_ORGANIZATION}}" >> $GITHUB_ENV
           terraform init
 
       - name: Terraform Validate
