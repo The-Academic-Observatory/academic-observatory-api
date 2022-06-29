@@ -203,6 +203,8 @@ jobs:
           else
             echo "TF_WORKSPACE=${{ env.STAGING_TF_WORKSPACE }}" >> $GITHUB_ENV;
           fi
+      - name: Set Terraform Organisation env
+        run: echo "TF_CLOUD_ORGANIZATION=${{env.TF_BACKEND_ORGANIZATION}}" >> $GITHUB_ENV
 
       - name: Terraform Format
         id: fmt
@@ -211,7 +213,6 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
-          echo "TF_CLOUD_ORGANIZATION=${{env.TF_BACKEND_ORGANIZATION}}" >> $GITHUB_ENV
           terraform init
 
       - name: Terraform Validate
